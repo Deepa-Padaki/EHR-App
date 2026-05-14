@@ -2,11 +2,15 @@ import axios from 'axios'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
 
+console.log('API_URL configured as:', API_URL)
+console.log('VITE_API_URL from env:', import.meta.env.VITE_API_URL)
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30 seconds timeout
 })
 
 api.interceptors.request.use((config) => {
@@ -15,7 +19,20 @@ api.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`
   }
   return config
+}, (error) => {
+  console.error('Request error:', error)
+  return Promise.reject(error)
 })
+
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API Error:', error.message)
+    console.error('API Error URL:', error.config?.url)
+    console.error('API Error Response:', error.response)
+    return Promise.reject(error)
+  }
+)
 
 export const authService = {
   register: async (userData) => {
