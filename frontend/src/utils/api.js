@@ -1,9 +1,12 @@
 import axios from 'axios'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+// Use environment variable if available, otherwise use production URL
+const API_URL = import.meta.env.VITE_API_URL || 'https://ehr-app-1.onrender.com/api'
 
-console.log('API_URL configured as:', API_URL)
+console.log('=== API Configuration ===')
+console.log('API_URL:', API_URL)
 console.log('VITE_API_URL from env:', import.meta.env.VITE_API_URL)
+console.log('========================')
 
 const api = axios.create({
   baseURL: API_URL,
